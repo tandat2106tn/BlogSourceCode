@@ -1,46 +1,85 @@
-﻿@model List<Bloggie.Web.Models.Domain.Tag>
+﻿@model PaginatedList<Bloggie.Web.Models.Domain.Tag>
 
 @{
+    ViewData["Title"] = "Show Tags";
 }
 
-<div class="bg-secondary bg-opacity-10 py-2">
-    <div class="container">
-        <h1>Show All Tags-Admin Functionality</h1>
-    </div>
-</div>
 
-<div class="container py-5">
-    @if (Model != null && Model.Any())
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+
+    @if (Model.Count > 0)
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Display Name</th>
-                    <th> </th>
+                <form asp-action="Show" method="get" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="searchString" placeholder="Search..." value="@ViewData["CurrentFilter"]" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                            <a asp-action="Show" class="btn btn-secondary">Reset</a>
+                        </div>
+                    </div>
+                </form>
 
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach(var tag in Model)
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <a asp-action="Show" asp-route-sortOrder="@ViewData["IdSortParm"]" class="text-dark">ID</a>
+                            </th>
+                            <th>
+                                <a asp-action="Show" asp-route-sortOrder="@ViewData["NameSortParm"]" class="text-dark">Name</a>
+                            </th>
+                            <th>
+                                <a asp-action="Show" asp-route-sortOrder="@ViewData["DisplayNameSortParm"]" class="text-dark">Display Name</a>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var tag in Model)
                 {
-                <tr>
-                    <td>@tag.Id</td>
-                    <td>@tag.Name</td>
-                    <td>@tag.DisplayName</td>
-                    <td>
-                        <a asp-area="" asp-controller="AdminTags" asp-action="Edit" asp-route-id="@tag.Id">Edit</a>
-                    </td>
-                    
-                </tr>
+                                    <tr>
+                                        <td>@tag.Id</td>
+                                        <td>@tag.Name</td>
+                                        <td>@tag.DisplayName</td>
+                                        
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@tag.Id" class="btn btn-primary btn-sm">Edit</a>
+                                            
+                                        </td>
+                                    </tr>
                 }
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between align-items-center">
+            @{
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+            }
+                    <a asp-action="Show"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="btn btn-primary @prevDisabled">
+                        Previous
+                    </a>
+                    <span>Page @Model.PageIndex of @Model.TotalPages</span>
+                    <a asp-action="Show"
+                       asp-route-sortOrder="@ViewData["CurrentSort"]"
+                       asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+                       class="btn btn-primary @nextDisabled">
+                        Next
+                    </a>
+                </div>
     }
     else
     {
-        <p>No tag is found!</p>
+            <div class="alert alert-info" role="alert">
+                No blogs found.
+                <a asp-action="Show" class="btn btn-primary mt-2">Back to Show All</a>
+            </div>
     }
 </div>

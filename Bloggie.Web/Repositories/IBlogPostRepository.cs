@@ -1,5 +1,5 @@
 ﻿using Bloggie.Web.Models.Domain;
-using CourseManagement.ViewModels;
+
 
 namespace Bloggie.Web.Repositories
 {
@@ -11,7 +11,7 @@ namespace Bloggie.Web.Repositories
         Task<BlogPost?> GetByUrlHandleAsync(string urlHandle);
         Task<BlogPost> AddAsync(BlogPost blogPost);
 
-        Task<BlogPost?>UpdateAsync(BlogPost blogPost);
+        Task<BlogPost?> UpdateAsync(BlogPost blogPost);
 
         Task<BlogPost?> DeleteAsync(Guid id);
 

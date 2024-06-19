@@ -13,6 +13,10 @@ namespace Bloggie.Web.Repositories
 
         Task<Tag?> DeleteAsync(Guid id);
 
+        Task<PaginatedList<Tag>> GetAllAsync(string sortOrder, string currentFilter, string searchString, int? pageNumber, int pageSize);
+
+
+
 
 
     }
